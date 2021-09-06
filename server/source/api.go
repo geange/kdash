@@ -94,6 +94,80 @@ var apis = []system.SysApi{
 	{global.GVA_MODEL{ID: 91, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/user/getUserInfo", "获取自身信息（必选）", "user", "GET"},
 }
 
+var kongApis = []system.SysApi{
+	{global.GVA_MODEL{ID: 92, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/service/create", "", "kongService", "POST"},
+	{global.GVA_MODEL{ID: 93, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/service/update", "", "kongService", "PUT"},
+	{global.GVA_MODEL{ID: 94, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/service/delete", "", "kongService", "DELETE"},
+	{global.GVA_MODEL{ID: 95, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/service/get", "", "kongService", "GET"},
+	{global.GVA_MODEL{ID: 96, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/service/list", "", "kongService", "GET"},
+	{global.GVA_MODEL{ID: 97, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/service/all", "", "kongService", "GET"},
+
+	{global.GVA_MODEL{ID: 98, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/route/create", "", "kongRoute", "POST"},
+	{global.GVA_MODEL{ID: 99, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/route/service", "", "kongRoute", "POST"},
+	{global.GVA_MODEL{ID: 100, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/route/update", "", "kongRoute", "PUT"},
+	{global.GVA_MODEL{ID: 101, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/route/delete", "", "kongRoute", "DELETE"},
+	{global.GVA_MODEL{ID: 102, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/route/get", "", "kongRoute", "GET"},
+	{global.GVA_MODEL{ID: 103, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/route/list", "", "kongRoute", "GET"},
+	{global.GVA_MODEL{ID: 104, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/route/all", "", "kongRoute", "GET"},
+	{global.GVA_MODEL{ID: 105, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/route/service", "", "kongRoute", "GET"},
+
+	{global.GVA_MODEL{ID: 106, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/upstream/create", "", "kongUpstream", "POST"},
+	{global.GVA_MODEL{ID: 107, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/upstream/update", "", "kongUpstream", "PUT"},
+	{global.GVA_MODEL{ID: 108, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/upstream/delete", "", "kongUpstream", "DELETE"},
+	{global.GVA_MODEL{ID: 109, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/upstream/get", "", "kongUpstream", "GET"},
+	{global.GVA_MODEL{ID: 110, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/upstream/list", "", "kongUpstream", "GET"},
+	{global.GVA_MODEL{ID: 111, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/upstream/all", "", "kongUpstream", "GET"},
+
+	{global.GVA_MODEL{ID: 112, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/target/create", "", "kongTarget", "POST"},
+	{global.GVA_MODEL{ID: 113, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/target/delete", "", "kongTarget", "DELETE"},
+	{global.GVA_MODEL{ID: 114, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/target/list", "", "kongTarget", "GET"},
+	{global.GVA_MODEL{ID: 115, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/target/all", "", "kongTarget", "GET"},
+	{global.GVA_MODEL{ID: 116, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/target/healthy", "", "kongTarget", "POST"},
+	{global.GVA_MODEL{ID: 117, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/target/unhealthy", "", "kongTarget", "POST"},
+
+	{global.GVA_MODEL{ID: 118, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/consumer/create", "", "kongConsumer", "POST"},
+	{global.GVA_MODEL{ID: 119, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/consumer/update", "", "kongConsumer", "PUT"},
+	{global.GVA_MODEL{ID: 120, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/consumer/delete", "", "kongConsumer", "DELETE"},
+	{global.GVA_MODEL{ID: 121, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/consumer/get", "", "kongConsumer", "GET"},
+	{global.GVA_MODEL{ID: 122, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/consumer/custom_id", "", "kongConsumer", "GET"},
+	{global.GVA_MODEL{ID: 123, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/consumer/list", "", "kongConsumer", "GET"},
+	{global.GVA_MODEL{ID: 124, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/consumer/all", "", "kongConsumer", "GET"},
+
+	{global.GVA_MODEL{ID: 125, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/plugin/create", "", "kongPlugin", "GET"},
+	{global.GVA_MODEL{ID: 126, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/plugin/update", "", "kongPlugin", "GET"},
+	{global.GVA_MODEL{ID: 127, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/plugin/delete", "", "kongPlugin", "GET"},
+	{global.GVA_MODEL{ID: 128, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/plugin/get", "", "kongPlugin", "GET"},
+	{global.GVA_MODEL{ID: 129, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/plugin/list", "", "kongPlugin", "GET"},
+	{global.GVA_MODEL{ID: 130, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/plugin/all", "", "kongPlugin", "GET"},
+	{global.GVA_MODEL{ID: 131, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/plugin/consumer", "", "kongPlugin", "GET"},
+	{global.GVA_MODEL{ID: 132, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/plugin/service", "", "kongPlugin", "GET"},
+	{global.GVA_MODEL{ID: 133, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/plugin/route", "", "kongPlugin", "GET"},
+	{global.GVA_MODEL{ID: 134, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/plugin/validate", "", "kongPlugin", "GET"},
+	{global.GVA_MODEL{ID: 135, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/plugin/schema", "", "kongPlugin", "GET"},
+
+	{global.GVA_MODEL{ID: 136, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/certificate/create", "", "kongCertificate", "POST"},
+	{global.GVA_MODEL{ID: 137, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/certificate/update", "", "kongCertificate", "PUT"},
+	{global.GVA_MODEL{ID: 138, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/certificate/delete", "", "kongCertificate", "DELETE"},
+	{global.GVA_MODEL{ID: 139, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/certificate/get", "", "kongCertificate", "GET"},
+	{global.GVA_MODEL{ID: 140, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/certificate/list", "", "kongCertificate", "GET"},
+	{global.GVA_MODEL{ID: 141, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/certificate/all", "", "kongCertificate", "GET"},
+
+	{global.GVA_MODEL{ID: 142, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/ca_certificate/create", "", "kongCACertificate", "GET"},
+	{global.GVA_MODEL{ID: 143, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/ca_certificate/update", "", "kongCACertificate", "GET"},
+	{global.GVA_MODEL{ID: 144, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/ca_certificate/delete", "", "kongCACertificate", "GET"},
+	{global.GVA_MODEL{ID: 145, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/ca_certificate/get", "", "kongCACertificate", "GET"},
+	{global.GVA_MODEL{ID: 146, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/ca_certificate/list", "", "kongCACertificate", "GET"},
+	{global.GVA_MODEL{ID: 147, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/ca_certificate/all", "", "kongCACertificate", "GET"},
+
+	{global.GVA_MODEL{ID: 148, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/sni/create", "", "kongSNI", "POST"},
+	{global.GVA_MODEL{ID: 149, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/sni/update", "", "kongSNI", "PUT"},
+	{global.GVA_MODEL{ID: 150, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/sni/delete", "", "kongSNI", "DELETE"},
+	{global.GVA_MODEL{ID: 151, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/sni/get", "", "kongSNI", "GET"},
+	{global.GVA_MODEL{ID: 152, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/sni/certificate", "", "kongSNI", "GET"},
+	{global.GVA_MODEL{ID: 153, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/sni/list", "", "kongSNI", "GET"},
+	{global.GVA_MODEL{ID: 154, CreatedAt: time.Now(), UpdatedAt: time.Now()}, "/kong/sni/all", "", "kongSNI", "GET"},
+}
+
 //@author: [SliverHorn](https://github.com/SliverHorn)
 //@description: sys_apis 表数据初始化
 func (a *api) Init() error {
@@ -102,7 +176,8 @@ func (a *api) Init() error {
 			color.Danger.Println("\n[Mysql] --> sys_apis 表的初始数据已存在!")
 			return nil
 		}
-		if err := tx.Create(&apis).Error; err != nil { // 遇到错误时回滚事务
+		apiItems := append(apis, kongApis...)
+		if err := tx.Create(&apiItems).Error; err != nil { // 遇到错误时回滚事务
 			return err
 		}
 		color.Info.Println("\n[Mysql] --> sys_apis 表初始数据成功!")
