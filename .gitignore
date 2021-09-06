@@ -1,0 +1,4 @@
+/web/node_modules/
+/server/go_build_gin_vue_admin
+/server/latest_log
+/server/log/*.log
