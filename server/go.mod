@@ -26,7 +26,7 @@ require (
 	github.com/gookit/color v1.3.1
 	github.com/jehiah/go-strftime v0.0.0-20171201141054-1d33003b3869 // indirect
 	github.com/jordan-wright/email v0.0.0-20200824153738-3f5bafa1cd84
-	github.com/json-iterator/go v1.1.10 // indirect
+	github.com/kong/go-kong v0.21.0
 	github.com/lestrrat-go/file-rotatelogs v2.3.0+incompatible
 	github.com/lestrrat-go/strftime v1.0.3 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
@@ -41,7 +41,6 @@ require (
 	github.com/spf13/afero v1.2.2 // indirect
 	github.com/spf13/cast v1.3.1 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
-	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.7.0
 	github.com/swaggo/gin-swagger v1.3.0
 	github.com/swaggo/swag v1.7.0
@@ -54,7 +53,6 @@ require (
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 	golang.org/x/sys v0.0.0-20210630005230-0f9fa26af87c // indirect
 	golang.org/x/tools v0.1.5 // indirect
-	google.golang.org/protobuf v1.24.0 // indirect
 	gopkg.in/ini.v1 v1.55.0 // indirect
 	gorm.io/driver/mysql v1.0.1
 	gorm.io/gorm v1.20.7

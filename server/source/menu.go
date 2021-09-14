@@ -35,10 +35,23 @@ var menus = []system.SysBaseMenu{
 	{GVA_MODEL: global.GVA_MODEL{ID: 19, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, Hidden: true, ParentId: "3", Path: "dictionaryDetail/:id", Name: "dictionaryDetail", Component: "view/superAdmin/dictionary/sysDictionaryDetail.vue", Sort: 1, Meta: system.Meta{Title: "字典详情", Icon: "s-order"}},
 	{GVA_MODEL: global.GVA_MODEL{ID: 20, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, Hidden: false, ParentId: "3", Path: "operation", Name: "operation", Component: "view/superAdmin/operation/sysOperationRecord.vue", Sort: 6, Meta: system.Meta{Title: "操作历史", Icon: "time"}},
 	{GVA_MODEL: global.GVA_MODEL{ID: 21, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, Hidden: false, ParentId: "9", Path: "simpleUploader", Name: "simpleUploader", Component: "view/example/simpleUploader/simpleUploader", Sort: 6, Meta: system.Meta{Title: "断点续传（插件版）", Icon: "upload"}},
-	{GVA_MODEL: global.GVA_MODEL{ID: 22, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, ParentId: "0", Path: "https://www.gin-vue-admin.com", Name: "https://www.gin-vue-admin.com", Hidden: false, Component: "/", Sort: 0, Meta: system.Meta{Title: "官方网站", Icon: "s-home"}},
+	//{GVA_MODEL: global.GVA_MODEL{ID: 22, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, ParentId: "0", Path: "https://www.gin-vue-admin.com", Name: "https://www.gin-vue-admin.com", Hidden: false, Component: "/", Sort: 0, Meta: system.Meta{Title: "官方网站", Icon: "s-home"}},
 	{GVA_MODEL: global.GVA_MODEL{ID: 23, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, ParentId: "0", Path: "state", Name: "state", Hidden: false, Component: "view/system/state.vue", Sort: 6, Meta: system.Meta{Title: "服务器状态", Icon: "cloudy"}},
 	{GVA_MODEL: global.GVA_MODEL{ID: 24, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, ParentId: "14", Path: "autoCodeAdmin", Name: "autoCodeAdmin", Hidden: false, Component: "view/systemTools/autoCodeAdmin/index.vue", Sort: 1, Meta: system.Meta{Title: "自动化代码管理", Icon: "s-finance"}},
 	{GVA_MODEL: global.GVA_MODEL{ID: 25, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, ParentId: "14", Path: "autoCodeEdit/:id", Name: "autoCodeEdit", Hidden: true, Component: "view/systemTools/autoCode/index.vue", Sort: 0, Meta: system.Meta{Title: "自动化代码（复用）", Icon: "s-finance"}},
+}
+
+var kongMenus = []system.SysBaseMenu{
+	{GVA_MODEL: global.GVA_MODEL{ID: 26, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, ParentId: "0", Path: "kong", Name: "kong", Hidden: false, Component: "view/kong/index.vue", Sort: 1, Meta: system.Meta{Title: "kong", Icon: "setting"}},
+	{GVA_MODEL: global.GVA_MODEL{ID: 27, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, Hidden: false, ParentId: "26", Path: "service", Name: "service", Component: "view/kong/service/service.vue", Sort: 0, Meta: system.Meta{Title: "service", Icon: "info"}},
+	{GVA_MODEL: global.GVA_MODEL{ID: 28, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, Hidden: false, ParentId: "26", Path: "route", Name: "route", Component: "view/kong/route/route.vue", Sort: 1, Meta: system.Meta{Title: "route", Icon: "info"}},
+	{GVA_MODEL: global.GVA_MODEL{ID: 29, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, Hidden: false, ParentId: "26", Path: "upstream", Name: "upstream", Component: "view/kong/upstream/upstream.vue", Sort: 2, Meta: system.Meta{Title: "upstream", Icon: "info"}},
+	{GVA_MODEL: global.GVA_MODEL{ID: 30, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, Hidden: false, ParentId: "26", Path: "target", Name: "target", Component: "view/kong/target/target.vue", Sort: 3, Meta: system.Meta{Title: "target", Icon: "info"}},
+	{GVA_MODEL: global.GVA_MODEL{ID: 31, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, Hidden: false, ParentId: "26", Path: "consumer", Name: "consumer", Component: "view/kong/consumer/consumer.vue", Sort: 4, Meta: system.Meta{Title: "consumer", Icon: "info"}},
+	{GVA_MODEL: global.GVA_MODEL{ID: 32, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, Hidden: false, ParentId: "26", Path: "plugin", Name: "plugin", Component: "view/kong/plugin/plugin.vue", Sort: 5, Meta: system.Meta{Title: "plugin", Icon: "info"}},
+	{GVA_MODEL: global.GVA_MODEL{ID: 33, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, Hidden: false, ParentId: "26", Path: "certificate", Name: "certificate", Component: "view/kong/certificate/certificate.vue", Sort: 6, Meta: system.Meta{Title: "certificate", Icon: "info"}},
+	{GVA_MODEL: global.GVA_MODEL{ID: 34, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, Hidden: false, ParentId: "26", Path: "ca_certificate", Name: "ca_certificate", Component: "view/kong/ca_certificate/ca_certificate.vue", Sort: 7, Meta: system.Meta{Title: "ca_certificate", Icon: "info"}},
+	{GVA_MODEL: global.GVA_MODEL{ID: 35, CreatedAt: time.Now(), UpdatedAt: time.Now()}, MenuLevel: 0, Hidden: false, ParentId: "26", Path: "sni", Name: "sni", Component: "view/kong/sni/sni.vue", Sort: 8, Meta: system.Meta{Title: "sni", Icon: "info"}},
 }
 
 //@author: [SliverHorn](https://github.com/SliverHorn)
@@ -49,6 +62,8 @@ func (m *menu) Init() error {
 			color.Danger.Println("\n[Mysql] --> sys_base_menus 表的初始数据已存在!")
 			return nil
 		}
+
+		menus = append(menus, kongMenus...)
 		if err := tx.Create(&menus).Error; err != nil { // 遇到错误时回滚事务
 			return err
 		}

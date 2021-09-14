@@ -59,7 +59,8 @@ import {
   Progress,
   MessageBox,
   Image,
-  ColorPicker
+  ColorPicker,
+  PageHeader
 } from 'element-ui'
 
 Vue.use(Button)
@@ -112,6 +113,7 @@ Vue.use(Scrollbar)
 Vue.use(Loading.directive)
 Vue.use(Image)
 Vue.use(ColorPicker)
+Vue.use(PageHeader)
 Vue.prototype.$loading = Loading.service
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm
