@@ -1,27 +1,36 @@
 <template>
-  <el-table :data="plugins" style="width: 100%">
-    <el-table-column label="ID">
-      <template slot-scope="item">
-        <el-button type="text">{{ item.row.id }}</el-button>
-      </template>
-    </el-table-column>
-    <el-table-column label="Name" prop="name" />
-    <el-table-column label="Enable" prop="desc">
-      <template slot-scope="item">
-        <el-switch v-model="item.row.enable" />
-      </template>
-    </el-table-column>
-    <el-table-column label="Tags" prop="tags">
-      <template slot-scope="props">
-        <el-tag v-for="tag in props.row.tags" :key="tag" size="mini">{{ tag }}</el-tag>
-      </template>
-    </el-table-column>
-  </el-table>
+  <div>
+    <div class="button-box clearflex">
+      <el-button size="mini" type="primary" icon="el-icon-plus" @click="add">ADD</el-button>
+    </div>
+    <el-table :data="plugins" style="width: 100%">
+      <el-table-column label="ID">
+        <template slot-scope="item">
+          <el-button type="text">{{ item.row.id }}</el-button>
+        </template>
+      </el-table-column>
+      <el-table-column label="Name" prop="name" />
+      <el-table-column label="Enable" prop="desc">
+        <template slot-scope="item">
+          <el-switch v-model="item.row.enable" />
+        </template>
+      </el-table-column>
+      <el-table-column label="Tags" prop="tags">
+        <template slot-scope="props">
+          <el-tag v-for="tag in props.row.tags" :key="tag" size="mini">{{ tag }}</el-tag>
+        </template>
+      </el-table-column>
+    </el-table>
+    <Dialog :visible="dialogFormVisible" @closeHandler="closeDialog" />
+  </div>
 </template>
 
 <script>
+import Dialog from '@/components/kong/plugin/dialog'
+
 export default {
   name: 'PluginTable',
+  components: { Dialog },
   props: {
     sid: {
       type: String,
@@ -30,6 +39,7 @@ export default {
   },
   data() {
     return {
+      dialogFormVisible: false,
       plugins: [
         {
           created_at: 0,
@@ -45,6 +55,15 @@ export default {
     }
   },
   created() {
+  },
+  methods: {
+    add() {
+      console.log('add new route')
+      this.dialogFormVisible = true
+    },
+    closeDialog() {
+      this.dialogFormVisible = false
+    }
   }
 }
 </script>

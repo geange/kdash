@@ -48,8 +48,8 @@
       <el-button v-else class="button-new-tag" size="small" @click="showCertsInput">+ New Tag</el-button>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="onSubmit">立即创建</el-button>
-      <el-button>取消</el-button>
+      <el-button type="primary" @click="onSubmit">Update</el-button>
+      <el-button>Cancel</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -57,7 +57,8 @@
 <script>
 
 import {
-  getService
+  getService,
+  updateService
 } from '@/api/kongService'
 
 export default {
@@ -72,24 +73,24 @@ export default {
     return {
       service: {
         client_certificate: {
-          id: 'xxxxxxx'
+          id: ''
         },
-        connect_timeout: 10,
-        created_at: 10,
+        connect_timeout: 0,
+        created_at: 0,
         host: '',
-        id: 'xxxxx',
-        name: 'xxx',
-        path: 'xx',
-        port: 8080,
-        protocol: 'http',
-        read_timeout: 10,
-        retries: 1,
+        id: '',
+        name: '',
+        path: '',
+        port: 0,
+        protocol: '',
+        read_timeout: 0,
+        retries: 0,
         updated_at: 0,
         url: '',
-        write_timeout: 10,
-        tags: ['a', 'b'],
-        tls_verify: true,
-        tls_verify_depth: 2,
+        write_timeout: 0,
+        tags: [],
+        tls_verify: false,
+        tls_verify_depth: 0,
         ca_certificates: []
       },
       inputTagsVisible: false,
@@ -108,6 +109,23 @@ export default {
         const v = rs.data
         this.service.id = v.id
         v.client_certificate !== undefined && (this.service.client_certificate = v.client_certificate)
+        v.connect_timeout !== undefined && (this.service.connect_timeout = v.connect_timeout)
+        v.created_at !== undefined && (this.service.created_at = v.created_at)
+        v.host !== undefined && (this.service.host = v.host)
+        v.id !== undefined && (this.service.id = v.id)
+        v.name !== undefined && (this.service.name = v.name)
+        v.path !== undefined && (this.service.path = v.path)
+        v.port !== undefined && (this.service.port = v.port)
+        v.protocol !== undefined && (this.service.protocol = v.protocol)
+        v.read_timeout !== undefined && (this.service.read_timeout = v.read_timeout)
+        v.retries !== undefined && (this.service.retries = v.retries)
+        v.updated_at !== undefined && (this.service.updated_at = v.updated_at)
+        v.url !== undefined && (this.service.url = v.url)
+        v.write_timeout !== undefined && (this.service.write_timeout = v.write_timeout)
+        v.tags !== undefined && (this.service.tags = v.tags)
+        v.tls_verify !== undefined && (this.service.tls_verify = v.tls_verify)
+        v.tls_verify_depth !== undefined && (this.service.tls_verify_depth = v.tls_verify_depth)
+        v.ca_certificates !== undefined && (this.service.ca_certificates = v.ca_certificates)
       }).catch(err => {
         this.$message({ type: 'error', message: err })
       })
@@ -151,7 +169,30 @@ export default {
       this.inputCertsVisible = false
       this.inputCertsValue = ''
     },
-    onSubmit() {}
+    async onSubmit() {
+      const data = {
+        id: this.service.id,
+        host: this.service.host,
+        name: this.service.name
+      }
+      this.service.client_certificate.id !== '' && (data.client_certificate.id = this.service.client_certificate.id)
+      this.service.path !== '' && (data.path = this.service.path)
+      this.service.port !== 0 && (data.port = this.service.port)
+      this.service.protocol !== '' && (data.protocol = this.service.protocol)
+      this.service.read_timeout !== 0 && (data.read_timeout = this.service.read_timeout)
+      this.service.retries !== 0 && (data.retries = this.service.retries)
+      this.service.url !== '' && (data.url = this.service.url)
+      this.service.write_timeout !== 0 && (data.write_timeout = this.service.write_timeout)
+      this.service.tags !== [] && (data.tags = this.service.tags)
+      this.service.tls_verify !== false && (data.tls_verify = this.service.tls_verify)
+      this.service.tls_verify_depth !== 0 && (data.tls_verify_depth = this.service.tls_verify_depth)
+      this.service.ca_certificates !== [] && (data.ca_certificates = this.service.ca_certificates)
+      updateService(data).then((rs) => {
+      }).catch(err => {
+        this.$message({ type: 'error', message: err })
+      })
+      await this.getService(this.sid)
+    }
   }
 }
 </script>

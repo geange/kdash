@@ -4,7 +4,7 @@
       <ServiceEditor :sid="sid" />
     </el-tab-pane>
     <el-tab-pane label="Route" name="route">
-      <RouteTable :sid="sid" />
+      <RouteTable :sid="sid" :rtype="routeType" />
     </el-tab-pane>
     <el-tab-pane label="Plugin" name="plugin">
       <PluginTable :sid="sid" />
@@ -51,6 +51,7 @@ export default {
   },
   data() {
     return {
+      routeType: 'service',
       activeName: 'service',
       list_opts: {
         pre: {
@@ -112,10 +113,10 @@ export default {
     ...mapGetters('user', ['token'])
   },
   async created() {
+    console.log('--------->', this.routeType)
   },
   methods: {
     handleClick(tab, event) {
-      console.log(tab, event)
     }
   }
 }

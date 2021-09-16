@@ -2,7 +2,7 @@
   <div>
     <div v-if="tableVisible">
       <div class="button-box clearflex">
-        <el-button size="mini" type="primary" icon="el-icon-plus" @click="addUser">添加Service</el-button>
+        <el-button size="mini" type="primary" icon="el-icon-plus" @click="add">ADD</el-button>
       </div>
       <el-table :data="tableData">
         <el-table-column label="ID" min-width="250">
@@ -19,6 +19,7 @@
           </template>
         </el-table-column>
       </el-table>
+      <Dialog :visible="dialogFormVisible" @closeHandler="closeDialog" @updateHandler="listServices" />
       <el-pagination
         :current-page="page"
         :page-size="pageSize"
@@ -59,13 +60,17 @@ import {
 import { getAuthorityList } from '@/api/authority'
 import infoList from '@/mixins/infoList'
 import { mapGetters } from 'vuex'
+
 import Tab from '@/components/kong/service/tab'
+import Dialog from '@/components/kong/service/dialog'
+
 export default {
   name: 'Api',
-  components: { Tab },
+  components: { Tab, Dialog },
   mixins: [infoList],
   data() {
     return {
+      dialogFormVisible: false,
       tableVisible: true,
       tabVisible: false,
       sid: '',
@@ -108,13 +113,8 @@ export default {
   computed: {
     ...mapGetters('user', ['token'])
   },
-  async created() {
-    // const svcs = this.list
-    //
+  async mounted() {
     await this.listServices()
-    this.setAuthorityIds()
-    const res = await getAuthorityList({ page: 1, pageSize: 999 })
-    this.setOptions(res.data.list)
   },
   methods: {
     goBack() {
@@ -127,85 +127,6 @@ export default {
       this.sid = id
       this.tableVisible = false
       this.tabVisible = true
-    },
-    setAuthorityIds() {
-      this.tableData && this.tableData.forEach((user) => {
-        const authorityIds = user.authorities && user.authorities.map(i => {
-          return i.authorityId
-        })
-        this.$set(user, 'authorityIds', authorityIds)
-      })
-    },
-    openHeaderChange() {
-      this.$refs.chooseImg.open()
-    },
-    setOptions(authData) {
-      this.authOptions = []
-      this.setAuthorityOptions(authData, this.authOptions)
-    },
-    setAuthorityOptions(AuthorityData, optionsData) {
-      AuthorityData &&
-        AuthorityData.map(item => {
-          if (item.children && item.children.length) {
-            const option = {
-              authorityId: item.authorityId,
-              authorityName: item.authorityName,
-              children: []
-            }
-            this.setAuthorityOptions(item.children, option.children)
-            optionsData.push(option)
-          } else {
-            const option = {
-              authorityId: item.authorityId,
-              authorityName: item.authorityName
-            }
-            optionsData.push(option)
-          }
-        })
-    },
-    async deleteUser(row) {
-      const res = await deleteUser({ id: row.ID })
-      if (res.code === 0) {
-        this.$message.success('删除成功')
-        await this.getTableData()
-        this.setAuthorityIds()
-        row.visible = false
-      }
-    },
-    async enterAddUserDialog() {
-      this.userInfo.authorityId = this.userInfo.authorityIds[0]
-      this.$refs.userForm.validate(async valid => {
-        if (valid) {
-          const res = await register(this.userInfo)
-          if (res.code === 0) {
-            this.$message({ type: 'success', message: '创建成功' })
-          }
-          await this.getTableData()
-          this.setAuthorityIds()
-          this.closeAddUserDialog()
-        }
-      })
-    },
-    closeAddUserDialog() {
-      this.$refs.userForm.resetFields()
-      this.addUserDialog = false
-    },
-    addUser() {
-      this.addUserDialog = true
-    },
-    async changeAuthority(row, flag) {
-      if (flag) {
-        return
-      }
-      this.$nextTick(async() => {
-        const res = await setUserAuthorities({
-          ID: row.ID,
-          authorityIds: row.authorityIds
-        })
-        if (res.code === 0) {
-          this.$message({ type: 'success', message: '角色设置成功' })
-        }
-      })
     },
     async listServices() {
       const params = this.list_opts.next
@@ -220,6 +141,13 @@ export default {
       }).catch(err => {
         console.log(err)
       })
+    },
+    add() {
+      console.log('add new route')
+      this.dialogFormVisible = true
+    },
+    closeDialog() {
+      this.dialogFormVisible = false
     }
   }
 }
