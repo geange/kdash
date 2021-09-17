@@ -1,6 +1,9 @@
 <template>
   <div>
     <div v-if="tableVisible">
+      <div class="button-box clearflex">
+        <el-button size="mini" type="primary" icon="el-icon-plus" @click="add">ADD</el-button>
+      </div>
       <el-table :data="upstreams" style="width: 100%">
         <el-table-column label="ID">
           <template slot-scope="item">
@@ -15,20 +18,29 @@
         </el-table-column>
       </el-table>
     </div>
+    <Dialog :visible="dialogFormVisible" @closeHandler="closeDialog" @updateHandler="getTableData" />
     <div v-if="tabVisible">
       <el-page-header title="back" content="Upstream" @back="goBack" />
-      <Tab style="margin-top: 20px" />
+      <Tab :id="id" style="margin-top: 20px" />
     </div>
   </div>
 </template>
 
 <script>
+
+import {
+  listAllUpstream
+} from '@/api/kongUpstream'
+
 import Tab from '@/components/kong/upstream/tab'
+import Dialog from '@/components/kong/upstream/dialog'
+
 export default {
   name: 'Upstream',
-  components: { Tab },
+  components: { Tab, Dialog },
   data() {
     return {
+      dialogFormVisible: false,
       id: '',
       tableVisible: true,
       tabVisible: false,
@@ -95,6 +107,9 @@ export default {
   created() {
     console.log('create')
   },
+  async mounted() {
+    await this.getTableData()
+  },
   methods: {
     goBack() {
       this.tableVisible = true
@@ -104,6 +119,24 @@ export default {
       this.id = id
       this.tableVisible = false
       this.tabVisible = true
+    },
+    add() {
+      console.log('add new route')
+      this.dialogFormVisible = true
+    },
+    closeDialog() {
+      this.dialogFormVisible = false
+    },
+    async getTableData() {
+      listAllUpstream().then((rs) => {
+        if (rs.data == null) {
+          this.upstreams = []
+        } else {
+          this.upstreams = rs.data.list
+        }
+      }).catch(err => {
+        console.log(err)
+      })
     }
   }
 }
@@ -114,7 +147,7 @@ export default {
     font-size: 0;
   }
   .demo-table-expand label {
-    width: 90px;
+    width: 100px;
     color: #99a9bf;
   }
   .demo-table-expand .el-form-item {

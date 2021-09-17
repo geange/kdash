@@ -42,10 +42,7 @@
 // 获取列表内容封装在mixins内部  getTableData方法 初始化已封装完成
 const path = process.env.VUE_APP_BASE_API
 import {
-  getUserList,
-  setUserAuthorities,
-  register,
-  deleteUser
+  getUserList
 } from '@/api/user'
 
 import {
@@ -57,7 +54,6 @@ import {
   listAllService
 } from '@/api/kongService'
 
-import { getAuthorityList } from '@/api/authority'
 import infoList from '@/mixins/infoList'
 import { mapGetters } from 'vuex'
 

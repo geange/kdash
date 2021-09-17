@@ -1,5 +1,8 @@
 <template>
   <el-form ref="upstream" :model="upstream" label-width="140px" label-position="left">
+    <el-form-item label="ID">
+      <el-input v-model="upstream.id" />
+    </el-form-item>
     <el-form-item label="Name">
       <el-input v-model="upstream.name" />
     </el-form-item>
@@ -33,62 +36,82 @@
     <el-form-item label="HashOnCookiePath">
       <el-input v-model="upstream.hash_on_cookie_path" />
     </el-form-item>
+    <el-form-item label="Tags">
+      <el-tag v-for="tag in upstream.tags" :key="tag" closable :disable-transitions="false" @close="handleTagsClose(tag)">
+        {{ tag }}
+      </el-tag>
+      <el-input v-if="inputTagsVisible" ref="saveTagsInput" v-model="inputTagValue" class="input-new-tag" size="small" @keyup.enter.native="handleTagsInputConfirm" @blur="handleTagsInputConfirm" />
+      <el-button v-else class="button-new-tag" size="small" @click="showTagsInput">+ New Tag</el-button>
+    </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="onSubmit">立即创建</el-button>
-      <el-button>取消</el-button>
+      <el-button type="primary" @click="onSubmit">Update</el-button>
+      <el-button>Cancel</el-button>
     </el-form-item>
   </el-form>
 </template>
 
 <script>
+import {
+  getUpstream,
+  updateUpstream
+} from '@/api/kongUpstream'
+
 export default {
-  name: 'UpstreamTable',
+  name: 'Editor',
+  props: {
+    id: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
     return {
+      inputTagsVisible: false,
+      inputTagValue: '',
       upstream: {
-        id: 'xxxxxxxxx',
-        name: 'xxxx',
-        host_header: 'XHHH',
+        id: '',
+        name: '',
+        host_header: '',
         client_certificate: {
-          id: '45666dd'
+          id: ''
         },
-        algorithm: 'sss',
+        algorithm: '',
         slots: 0,
         healthchecks: {
-          threshold: 1.8,
+          threshold: 0,
           active: {
             concurrency: 0,
             healthy: {
-              http_statuses: [200, 201],
-              interval: 10,
-              successes: 6
+              http_statuses: [],
+              interval: 0,
+              successes: 0
             },
             http_path: '',
             https_sni: '',
             https_verify_certificate: false,
-            type: 'no',
-            timeout: 10,
+            type: '',
+            timeout: 0,
             unhealthy: {
-              http_failures: 5,
-              http_statuses: [404, 500],
-              tcp_failures: 10,
-              timeouts: 10,
-              interval: 5
+              http_failures: 0,
+              http_statuses: [],
+              tcp_failures: 0,
+              timeouts: 0,
+              interval: 0
             }
           },
           passive: {
             healthy: {
-              http_statuses: [200, 201],
-              interval: 10,
-              successes: 6
+              http_statuses: [],
+              interval: 0,
+              successes: 0
             },
-            type: 'no',
+            type: '',
             unhealthy: {
-              http_failures: 5,
-              http_statuses: [404, 500],
-              tcp_failures: 10,
-              timeouts: 10,
-              interval: 5
+              http_failures: 0,
+              http_statuses: [],
+              tcp_failures: 0,
+              timeouts: 0,
+              interval: 0
             }
           }
         },
@@ -99,15 +122,84 @@ export default {
         hash_fallback_header: '',
         hash_on_cookie: '',
         hash_on_cookie_path: '',
-        tags: ['a', 'b']
+        tags: []
       }
     }
   },
   created() {
-    console.log('create')
+  },
+  async mounted() {
+    await this.getUpstreamData(this.id)
   },
   methods: {
-    onSubmit() {
+    async getUpstreamData(id) {
+      const params = { id: id }
+      getUpstream(params).then((rs) => {
+        const item = rs.data
+        this.upstream.id = item.id
+        this.upstream.name = item.name
+        this.upstream.host_header = item.host_header
+
+        item.client_certificate !== undefined && (this.upstream.client_certificate.id = item.client_certificate.id)
+        item.algorithm !== undefined && (this.upstream.algorithm = item.algorithm)
+        item.slots !== undefined && (this.upstream.slots = item.slots)
+
+        item.hash_on !== '' && (this.upstream.hash_on = item.hash_on)
+        item.hash_fallback !== '' && (this.upstream.hash_fallback = item.hash_fallback)
+        item.hash_on_header !== '' && (this.upstream.hash_on_header = item.hash_on_header)
+        item.hash_fallback_header !== '' && (this.upstream.hash_fallback_header = item.hash_fallback_header)
+        item.hash_on_cookie !== '' && (this.upstream.hash_on_cookie = item.hash_on_cookie)
+        item.hash_on_cookie_path !== '' && (this.upstream.hash_on_cookie_path = item.hash_on_cookie_path)
+        item.tags !== [] && (this.upstream.tags = item.tags)
+      }).catch(err => {
+        this.$message({ type: 'error', message: err })
+      })
+    },
+    async onSubmit() {
+      const item = this.upstream
+
+      const data = {
+        id: item.id,
+        name: item.name
+      }
+
+      item.host_header !== '' && (data.host_header = item.host_header)
+      item.algorithm !== '' && (data.algorithm = item.algorithm)
+      item.client_certificate.id !== '' && (data.client_certificate.id = item.client_certificate.id)
+      item.hash_on !== '' && (data.hash_on = item.hash_on)
+      item.hash_fallback !== '' && (data.hash_fallback = item.hash_fallback)
+      item.hash_on_header !== '' && (data.hash_on_header = item.hash_on_header)
+      item.hash_fallback_header !== '' && (data.hash_fallback_header = item.hash_fallback_header)
+      item.hash_on_cookie !== '' && (data.hash_on_cookie = item.hash_on_cookie)
+      item.hash_on_cookie_path !== '' && (data.hash_on_cookie_path = item.hash_on_cookie_path)
+      item.tags !== [] && (data.tags = item.tags)
+
+      updateUpstream(data).then((rs) => {
+        console.log('create upstream')
+        this.$emit('closeHandler')
+        this.$emit('updateHandler')
+      }).catch(err => {
+        this.$message({ type: 'error', message: err })
+      })
+    },
+    handleTagsClose(tag) {
+      this.upstream.tags.splice(this.upstream.tags.indexOf(tag), 1)
+    },
+    showTagsInput() {
+      this.inputTagsVisible = true
+      this.$nextTick(_ => {
+        this.$refs.saveTagsInput.$refs.input.focus()
+      })
+    },
+    handleTagsInputConfirm() {
+      if (this.inputTagValue) {
+        if (this.upstream.tags === undefined) {
+          this.upstream.tags = []
+        }
+        this.upstream.tags.push(this.inputTagValue)
+      }
+      this.inputTagsVisible = false
+      this.inputTagValue = ''
     }
   }
 }

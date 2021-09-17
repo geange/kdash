@@ -1,7 +1,7 @@
 <template>
   <el-tabs v-model="activeName" @tab-click="handleClick">
     <el-tab-pane label="Upstream" name="upstream">
-      <UpstreamEditor />
+      <UpstreamEditor :id="id" />
     </el-tab-pane>
     <el-tab-pane label="Targets" name="targets">
       <TargetTable />
@@ -39,7 +39,7 @@ export default {
   components: { UpstreamEditor, TargetTable },
   mixins: [infoList],
   props: {
-    sid: {
+    id: {
       type: String,
       default: ''
     }
@@ -107,10 +107,10 @@ export default {
     ...mapGetters('user', ['token'])
   },
   async created() {
+    console.log(this.id)
   },
   methods: {
     handleClick(tab, event) {
-      console.log(tab, event)
     }
   }
 }
