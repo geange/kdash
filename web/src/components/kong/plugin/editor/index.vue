@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="plugin" :model="plugin" label-width="180px" label-position="left">
+  <el-form ref="plugin" :model="plugin" label-width="auto">
     <el-form-item label="ID">
       <el-tag>{{ plugin.id }}</el-tag>
     </el-form-item>

@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="service" :model="service" label-width="120px" label-position="left">
+  <el-form ref="service" :model="service" label-width="auto">
     <el-form-item label="ID">
       <el-tag>{{ service.id }}</el-tag>
     </el-form-item>

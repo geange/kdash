@@ -152,8 +152,8 @@ export default {
         client_certificate: {
           id: ''
         },
-        algorithm: '',
-        slots: 0,
+        algorithm: 'round-robin',
+        slots: 10000,
         healthchecks: {
           threshold: 0,
           active: {
@@ -193,8 +193,8 @@ export default {
           }
         },
         created_at: 0,
-        hash_on: '',
-        hash_fallback: '',
+        hash_on: 'none',
+        hash_fallback: 'none',
         hash_on_header: '',
         hash_fallback_header: '',
         hash_on_cookie: '',

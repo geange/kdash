@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="route" :model="route" label-width="180px" label-position="left">
+  <el-form ref="route" :model="route" label-width="auto">
     <el-form-item label="Name">
       <el-input v-model="route.name" />
     </el-form-item>

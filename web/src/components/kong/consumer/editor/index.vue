@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="consumer" :model="consumer" label-width="80px">
+  <el-form ref="consumer" :model="consumer" label-width="auto">
     <el-form-item label="CustomID">
       <el-input v-model="consumer.custom_id" style="width: 300px" />
     </el-form-item>

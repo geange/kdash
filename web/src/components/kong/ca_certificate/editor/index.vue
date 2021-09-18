@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="ca_certificate" :model="ca_certificate" label-width="180px" label-position="left">
+  <el-form ref="ca_certificate" :model="ca_certificate" label-width="auto">
     <el-form-item label="ID">
       <el-tag>{{ ca_certificate.id }}</el-tag>
     </el-form-item>
