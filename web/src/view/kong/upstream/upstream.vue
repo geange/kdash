@@ -21,7 +21,11 @@
     <Dialog :visible="dialogFormVisible" @closeHandler="closeDialog" @updateHandler="getTableData" />
     <div v-if="tabVisible">
       <el-page-header title="back" content="Upstream" @back="goBack" />
-      <Tab :id="id" style="margin-top: 20px" />
+      <Tab :id="id" :op="op" style="margin-top: 20px" />
+    </div>
+    <div v-if="creatorVisible">
+      <el-page-header title="back" content="Create" @back="goBack" />
+      <Editor :op="op" style="margin-top: 40px" />
     </div>
   </div>
 </template>
@@ -34,16 +38,19 @@ import {
 
 import Tab from '@/components/kong/upstream/tab'
 import Dialog from '@/components/kong/upstream/dialog'
+import Editor from '@/components/kong/upstream/editor'
 
 export default {
   name: 'Upstream',
-  components: { Tab, Dialog },
+  components: { Tab, Dialog, Editor },
   data() {
     return {
       dialogFormVisible: false,
       id: '',
+      op: '',
       tableVisible: true,
       tabVisible: false,
+      creatorVisible: false,
       upstreams: [
         {
           id: 'xxxxxxxxx',
@@ -114,15 +121,20 @@ export default {
     goBack() {
       this.tableVisible = true
       this.tabVisible = false
+      this.creatorVisible = false
     },
     openTab(id) {
       this.id = id
+      this.op = 'edit'
       this.tableVisible = false
       this.tabVisible = true
+      this.creatorVisible = false
     },
     add() {
-      console.log('add new route')
-      this.dialogFormVisible = true
+      this.op = 'create'
+      this.creatorVisible = true
+      this.tableVisible = false
+      this.tabVisible = false
     },
     closeDialog() {
       this.dialogFormVisible = false

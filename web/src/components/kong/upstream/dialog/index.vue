@@ -1,7 +1,7 @@
 <template>
   <div>
-    <el-dialog :before-close="closeDialog" :visible.sync="visible" title="客户">
-      <el-form ref="upstream" :model="upstream" label-width="140px" label-position="left">
+    <el-dialog :before-close="closeDialog" :visible.sync="visible" title="create Upstream">
+      <el-form ref="upstream" :model="upstream" label-width="auto">
         <el-form-item label="Name">
           <el-input v-model="upstream.name" />
         </el-form-item>

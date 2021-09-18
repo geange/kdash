@@ -1,7 +1,7 @@
 <template>
   <el-tabs v-model="activeName" @tab-click="handleClick">
     <el-tab-pane label="Upstream" name="upstream">
-      <UpstreamEditor :id="id" />
+      <UpstreamEditor :id="id" :op="op" />
     </el-tab-pane>
     <el-tab-pane label="Targets" name="targets">
       <TargetTable />
@@ -40,6 +40,10 @@ export default {
   mixins: [infoList],
   props: {
     id: {
+      type: String,
+      default: ''
+    },
+    op: {
       type: String,
       default: ''
     }

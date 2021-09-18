@@ -72,3 +72,31 @@
     color: #409EFF !important;
     border: 1px solid #409EFF;
 }
+
+.admin-box .el-input__inner {
+    border-top-width: inherit;
+    border-left-width: inherit;
+    border-right-width: inherit;
+    border-bottom-width: 2px;
+    border-radius: inherit;
+}
+
+.el-form-item__label-wrap .el-form-item__label {
+    font-size: 14px;
+    color: #7e879a;
+    padding-top: 5px;
+    padding-right: 30px;
+    padding-left: 40px;
+}
+
+.desc-font {
+    font-size: 13px;
+    color: #8b95aa;
+    line-height: 1.5;
+}
+
+.mark-font {
+    font-size: 13px;
+    font-weight: bold;
+    color: #fa6863;
+}
