@@ -46,7 +46,7 @@
     </el-form-item>
     <el-form-item label="Hash On Cookie Path">
       <el-input v-model="upstream.hash_on_cookie_path" />
-      <p class="desc-font">The cookie path to set in the response headers. Only required when <span class="desc-font">hash_on</span> or <span class="desc-font">hash_fallback</span> is set to cookie. Default: <span class="mark-font">"/"</span>.</p>
+      <p class="desc-font">The cookie path to set in the response headers. Only required when <span class="mark-font">hash_on</span> or <span class="mark-font">hash_fallback</span> is set to cookie. Default: <span class="mark-font">"/"</span>.</p>
     </el-form-item>
     <el-form-item label="Tags">
       <el-tag v-for="tag in upstream.tags" :key="tag" closable :disable-transitions="false" @close="handleTagsClose(tag)">
@@ -54,6 +54,84 @@
       </el-tag>
       <el-input v-if="inputTagsVisible" ref="saveTagsInput" v-model="inputTagValue" class="input-new-tag" size="small" @keyup.enter.native="handleTagsInputConfirm" @blur="handleTagsInputConfirm" />
       <el-button v-else class="button-new-tag" size="small" @click="showTagsInput">+ New Tag</el-button>
+    </el-form-item>
+    <el-form-item label="Healthchecks">
+      <el-collapse accordion>
+        <el-collapse-item title="Active">
+          <el-form ref="activeCheck" label-width="180px" label-position="right">
+            <el-form-item label="Concurrency">
+              <el-input v-model="upstream.healthchecks.active.concurrency" />
+              <p class="desc-font">Number of targets to check concurrently in active health checks. Default: <span class="mark-font">10</span>.</p>
+            </el-form-item>
+            <el-form-item label="Http Path">
+              <el-input v-model="upstream.healthchecks.active.http_path" />
+              <p class="desc-font">Path to use in GET HTTP request to run as a probe on active health checks. Default: <span class="mark-font">"/"</span>.</p>
+            </el-form-item>
+            <el-form-item label="Https SNI">
+              <el-input v-model="upstream.healthchecks.active.https_sni" />
+              <p class="desc-font">The hostname to use as an SNI (Server Name Identification) when performing active health checks using HTTPS. This is particularly useful when Targets are configured using IPs, so that the target host’s certificate can be verified with the proper SNI.</p>
+            </el-form-item>
+            <el-form-item label="Https Verify Certificate">
+              <el-switch v-model="upstream.healthchecks.active.https_verify_certificate" />
+              <p class="desc-font">Whether to check the validity of the SSL certificate of the remote host when performing active health checks using HTTPS. Default: <span class="mark-font">true</span>.</p>
+            </el-form-item>
+            <el-form-item label="Type">
+              <el-select v-model="upstream.healthchecks.active.type">
+                <el-option v-for="item in net_type_options" :key="item.value" :label="item.label" :value="item.value" />
+              </el-select>
+              <p class="desc-font">Whether to perform active health checks using HTTP or HTTPS, or just attempt a TCP connection. Accepted values are: <span class="mark-font">tcp</span>, <span class="mark-font">http</span>, <span class="mark-font">https</span>, <span class="mark-font">grpc</span>, <span class="mark-font">grpcs</span>. Default: <span class="mark-font">http</span>.</p>
+            </el-form-item>
+            <el-form-item label="Timeout">
+              <el-input v-model="upstream.healthchecks.active.timeout" />
+            </el-form-item>
+            <el-form-item label="Healthy Http Statuses">
+              <div>
+                <el-tag v-for="status in upstream.healthchecks.active.healthy.http_statuses" :key="status" closable :disable-transitions="false" @close="removeTags('active.healthy.http_statuses', status)">
+                  {{ status }}
+                </el-tag>
+              </div>
+              <el-input v-model="activeHealthyStatus" @keyup.enter.native="addTags('active.healthy.http_statuses')" />
+              <p class="desc-font">An array of HTTP statuses to consider a success, indicating healthiness, when returned by a probe in active health checks. Default: <span class="mark-font">[200, 302]</span>. With form-encoded, the notation is http_statuses[]=200&http_statuses[]=302. With JSON, use an Array.</p>
+            </el-form-item>
+            <el-form-item label="Healthy Interval">
+              <el-input v-model="upstream.healthchecks.active.healthy.interval" />
+              <p class="desc-font">Interval between active health checks for healthy targets (in seconds). A value of zero indicates that active probes for healthy targets should not be performed. Default: <span class="mark-font">0</span>.</p>
+            </el-form-item>
+            <el-form-item label="Healthy Successes">
+              <el-input v-model="upstream.healthchecks.active.healthy.successes" />
+              <p class="desc-font">Number of successes in active probes (as defined by healthchecks.active.healthy.http_statuses) to consider a target healthy. Default: <span class="mark-font">0</span>.</p>
+            </el-form-item>
+            <el-form-item label="Unhealthy Http Failures">
+              <el-input v-model="upstream.healthchecks.active.unhealthy.http_failures" />
+              <p class="desc-font">Number of HTTP failures in active probes (as defined by healthchecks.active.unhealthy.http_statuses) to consider a target unhealthy. Default: <span class="mark-font">0</span>.</p>
+            </el-form-item>
+            <el-form-item label="Unhealthy Http Statuses">
+              <div>
+                <el-tag v-for="status in upstream.healthchecks.active.unhealthy.http_statuses" :key="status" closable :disable-transitions="false" @close="removeTags('active.unhealthy.http_statuses', status)">
+                  {{ status }}
+                </el-tag>
+              </div>
+              <el-input v-model="activeUnhealthyStatus" @keyup.enter.native="addTags('active.unhealthy.http_statuses')" />
+              <p class="desc-font">An array of HTTP statuses to consider a failure, indicating unhealthiness, when returned by a probe in active health checks. Default: <span class="mark-font">[429, 404, 500, 501, 502, 503, 504, 505]</span>. With form-encoded, the notation is http_statuses[]=429&http_statuses[]=404. With JSON, use an Array.</p>
+            </el-form-item>
+            <el-form-item label="Unhealthy TCP Failures">
+              <el-input v-model="upstream.healthchecks.active.unhealthy.tcp_failures" />
+              <p class="desc-font">Number of TCP failures in active probes to consider a target unhealthy. Default: <span class="mark-font">0</span>.</p>
+            </el-form-item>
+            <el-form-item label="Unhealthy Timeouts">
+              <el-input v-model="upstream.healthchecks.active.unhealthy.timeouts" />
+              <p class="desc-font">Number of timeouts in active probes to consider a target unhealthy. Default: <span class="mark-font">0</span>.</p>
+            </el-form-item>
+            <el-form-item label="Unhealthy Interval">
+              <el-input v-model="upstream.healthchecks.active.unhealthy.interval" />
+              <p class="desc-font">Interval between active health checks for unhealthy targets (in seconds). A value of zero indicates that active probes for unhealthy targets should not be performed. Default: <span class="mark-font">0</span>.</p>
+            </el-form-item>
+          </el-form>
+        </el-collapse-item>
+        <el-collapse-item title="Passive" name="passic">
+          <el-form ref="passive" :model="upstream.healthchecks.passive" label-width="auto" />
+        </el-collapse-item>
+      </el-collapse>
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="onSubmit">Update</el-button>
@@ -82,6 +160,8 @@ export default {
   },
   data() {
     return {
+      activeHealthyStatus: '',
+      activeUnhealthyStatus: '',
       hash_on_options: [
         {
           value: 'none',
@@ -128,6 +208,30 @@ export default {
         }
       ],
 
+      net_type_options: [
+        {
+          value: 'http',
+          label: ''
+        },
+        {
+          value: 'https',
+          label: 'https'
+        },
+        {
+          value: 'tcp',
+          label: 'tcp'
+        },
+
+        {
+          value: 'grpc',
+          label: 'grpc'
+        },
+        {
+          value: 'grpcs',
+          label: 'grpcs'
+        }
+      ],
+
       algorithm_options: [
         {
           value: 'round-robin',
@@ -145,6 +249,10 @@ export default {
 
       inputTagsVisible: false,
       inputTagValue: '',
+
+      inputActiveHealStatusVisible: false,
+      inputActiveHealStatusValue: '',
+
       upstream: {
         id: '',
         name: '',
@@ -215,22 +323,43 @@ export default {
     async getUpstreamData(id) {
       const params = { id: id }
       getUpstream(params).then((rs) => {
+        const ptr = this.upstream
         const item = rs.data
-        this.upstream.id = item.id
-        this.upstream.name = item.name
-        this.upstream.host_header = item.host_header
+        ptr.id = item.id
+        ptr.name = item.name
+        ptr.host_header = item.host_header
 
-        item.client_certificate !== undefined && (this.upstream.client_certificate.id = item.client_certificate.id)
-        item.algorithm !== undefined && (this.upstream.algorithm = item.algorithm)
-        item.slots !== undefined && (this.upstream.slots = item.slots)
+        item.client_certificate !== undefined && (ptr.client_certificate.id = item.client_certificate.id)
+        item.algorithm !== undefined && (ptr.algorithm = item.algorithm)
+        item.slots !== undefined && (ptr.slots = item.slots)
 
-        item.hash_on !== '' && (this.upstream.hash_on = item.hash_on)
-        item.hash_fallback !== '' && (this.upstream.hash_fallback = item.hash_fallback)
-        item.hash_on_header !== '' && (this.upstream.hash_on_header = item.hash_on_header)
-        item.hash_fallback_header !== '' && (this.upstream.hash_fallback_header = item.hash_fallback_header)
-        item.hash_on_cookie !== '' && (this.upstream.hash_on_cookie = item.hash_on_cookie)
-        item.hash_on_cookie_path !== '' && (this.upstream.hash_on_cookie_path = item.hash_on_cookie_path)
-        item.tags !== [] && (this.upstream.tags = item.tags)
+        item.hash_on !== undefined && (ptr.hash_on = item.hash_on)
+        item.hash_fallback !== undefined && (ptr.hash_fallback = item.hash_fallback)
+        item.hash_on_header !== undefined && (ptr.hash_on_header = item.hash_on_header)
+        item.hash_fallback_header !== undefined && (ptr.hash_fallback_header = item.hash_fallback_header)
+        item.hash_on_cookie !== undefined && (ptr.hash_on_cookie = item.hash_on_cookie)
+        item.hash_on_cookie_path !== undefined && (ptr.hash_on_cookie_path = item.hash_on_cookie_path)
+        item.tags !== undefined && (ptr.tags = item.tags)
+        item.healthchecks.threshold !== undefined && (ptr.healthchecks.threshold = item.healthchecks.threshold)
+
+        const activePtr = ptr.healthchecks.active
+        const active = item.healthchecks.active
+        active.concurrency !== undefined && (activePtr.concurrency = active.concurrency)
+        active.http_path !== undefined && (activePtr.http_path = active.http_path)
+        active.https_sni !== undefined && (activePtr.https_sni = active.https_sni)
+        active.https_verify_certificate !== undefined && (activePtr.https_verify_certificate = active.https_verify_certificate)
+        active.type !== undefined && (activePtr.type = active.type)
+        active.timeout !== undefined && (activePtr.timeout = active.timeout)
+
+        active.healthy.http_statuses !== undefined && (activePtr.healthy.http_statuses = active.healthy.http_statuses)
+        active.healthy.interval !== undefined && (activePtr.healthy.interval = active.healthy.interval)
+        active.healthy.successes !== undefined && (activePtr.healthy.successes = active.healthy.successes)
+
+        active.unhealthy.http_failures !== undefined && (activePtr.unhealthy.http_failures = active.unhealthy.http_failures)
+        active.unhealthy.http_statuses !== undefined && (activePtr.unhealthy.http_statuses = active.unhealthy.http_statuses)
+        active.unhealthy.tcp_failures !== undefined && (activePtr.unhealthy.tcp_failures = active.unhealthy.tcp_failures)
+        active.unhealthy.timeouts !== undefined && (activePtr.unhealthy.timeouts = active.unhealthy.timeouts)
+        active.unhealthy.interval !== undefined && (activePtr.unhealthy.interval = active.unhealthy.interval)
       }).catch(err => {
         this.$message({ type: 'error', message: err })
       })
@@ -284,6 +413,34 @@ export default {
       }
       this.inputTagsVisible = false
       this.inputTagValue = ''
+    },
+    addTags(addType) {
+      switch (addType) {
+        case 'active.healthy.http_statuses':
+          if (this.upstream.healthchecks.active.healthy.http_statuses === undefined) {
+            this.upstream.healthchecks.active.healthy.http_statuses = []
+          }
+          this.upstream.healthchecks.active.healthy.http_statuses.push(this.activeHealthyStatus)
+          this.activeHealthyStatus = ''
+          break
+        case 'active.unhealthy.http_statuses':
+          if (this.upstream.healthchecks.active.unhealthy.http_statuses === undefined) {
+            this.upstream.healthchecks.active.unhealthy.http_statuses = []
+          }
+          this.upstream.healthchecks.active.unhealthy.http_statuses.push(this.activeUnhealthyStatus)
+          this.activeUnhealthyStatus = ''
+          break
+      }
+    },
+    removeTags(rmType, tag) {
+      switch (rmType) {
+        case 'active.healthy.http_statuses':
+          this.upstream.healthchecks.active.healthy.http_statuses.splice(this.upstream.healthchecks.active.healthy.http_statuses.indexOf(tag), 1)
+          break
+        case 'active.unhealthy.http_statuses':
+          this.upstream.healthchecks.active.unhealthy.http_statuses.splice(this.upstream.healthchecks.active.unhealthy.http_statuses.indexOf(tag), 1)
+          break
+      }
     }
   }
 }
@@ -293,23 +450,22 @@ export default {
   .el-input {
     width: 300px;
   }
-  .demo-table-expand {
-    font-size: 0;
-  }
-  .demo-table-expand label {
-    width: 90px;
-    color: #99a9bf;
-  }
-  .demo-table-expand .el-form-item {
-    margin-right: 0;
-    margin-bottom: 0;
-    width: 50%;
-  }
   .el-tag + .el-tag {
     margin-left: 10px;
   }
   .span {
     font-size: 13px;
     color: #fa6863;
+  }
+  .el-form-item__label {
+    color: #7e879a;
+  }
+  .el-collapse-item__header {
+    color: #a1adc5;
+    height: 60px;
+  }
+
+  .el-form-item__content {
+    padding-right: 30px;
   }
 </style>

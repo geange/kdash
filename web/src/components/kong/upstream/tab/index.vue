@@ -128,36 +128,6 @@ export default {
   }
 }
 
-.user-dialog {
-  .header-img-box {
-  width: 200px;
-  height: 200px;
-  border: 1px dashed #ccc;
-  border-radius: 20px;
-  text-align: center;
-  line-height: 200px;
-  cursor: pointer;
-}
-  .avatar-uploader .el-upload:hover {
-    border-color: #409eff;
-  }
-  .avatar-uploader-icon {
-    border: 1px dashed #d9d9d9 !important;
-    border-radius: 6px;
-    font-size: 28px;
-    color: #8c939d;
-    width: 178px;
-    height: 178px;
-    line-height: 178px;
-    text-align: center;
-  }
-  .avatar {
-    width: 178px;
-    height: 178px;
-    display: block;
-  }
-}
-
 .demo-table-expand {
   font-size: 0;
 }
