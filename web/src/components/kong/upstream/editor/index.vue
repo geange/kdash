@@ -48,13 +48,24 @@
       <el-input v-model="upstream.hash_on_cookie_path" />
       <p>The cookie path to set in the response headers. Only required when <font>hash_on</font> or <font>hash_fallback</font> is set to cookie. Default: <font>"/"</font>.</p>
     </el-form-item>
+
     <el-form-item label="Tags">
+      <div>
+        <el-tag v-for="tag in upstream.tags" :key="tag" closable :disable-transitions="false" @close="removeTags('tags', tag)">
+          {{ tag }}
+        </el-tag>
+      </div>
+      <el-input v-model="inputTagValue" @keyup.enter.native="addTags('tags')" />
+      <p>An optional set of strings associated with the Service for grouping and filtering.</p>
+    </el-form-item>
+
+    <!-- <el-form-item label="Tags">
       <el-tag v-for="tag in upstream.tags" :key="tag" closable :disable-transitions="false" @close="handleTagsClose(tag)">
         {{ tag }}
       </el-tag>
       <el-input v-if="inputTagsVisible" ref="saveTagsInput" v-model="inputTagValue" class="input-new-tag" size="small" @keyup.enter.native="handleTagsInputConfirm" @blur="handleTagsInputConfirm" />
       <el-button v-else class="button-new-tag" size="small" @click="showTagsInput">+ New Tag</el-button>
-    </el-form-item>
+    </el-form-item> -->
     <el-form-item label="Healthchecks">
       <el-collapse accordion>
         <el-collapse-item title="Active">
@@ -444,27 +455,15 @@ export default {
         this.$message({ type: 'error', message: err })
       })
     },
-    handleTagsClose(tag) {
-      this.upstream.tags.splice(this.upstream.tags.indexOf(tag), 1)
-    },
-    showTagsInput() {
-      this.inputTagsVisible = true
-      this.$nextTick(_ => {
-        this.$refs.saveTagsInput.$refs.input.font()
-      })
-    },
-    handleTagsInputConfirm() {
-      if (this.inputTagValue) {
-        if (this.upstream.tags === undefined) {
-          this.upstream.tags = []
-        }
-        this.upstream.tags.push(this.inputTagValue)
-      }
-      this.inputTagsVisible = false
-      this.inputTagValue = ''
-    },
     addTags(addType) {
       switch (addType) {
+        case 'tags':
+          if (this.upstream.tags === undefined) {
+            this.upstream.tags = []
+          }
+          this.upstream.tags.push(this.inputTagValue)
+          this.inputTagValue = ''
+          break
         case 'active.healthy.http_statuses':
           if (this.upstream.healthchecks.active.healthy.http_statuses === undefined) {
             this.upstream.healthchecks.active.healthy.http_statuses = []
@@ -483,6 +482,9 @@ export default {
     },
     removeTags(rmType, tag) {
       switch (rmType) {
+        case 'tags':
+          this.upstream.tags.splice(this.upstream.tags.indexOf(tag), 1)
+          break
         case 'active.healthy.http_statuses':
           this.upstream.healthchecks.active.healthy.http_statuses.splice(this.upstream.healthchecks.active.healthy.http_statuses.indexOf(tag), 1)
           break

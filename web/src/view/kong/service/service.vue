@@ -33,7 +33,11 @@
     </div>
     <div v-if="tabVisible">
       <el-page-header title="back" content="Service" @back="goBack" />
-      <Tab :sid="sid" style="margin-top: 20px" />
+      <Tab :sid="sid" :op="op" style="margin-top: 20px" />
+    </div>
+    <div v-if="creatorVisible">
+      <el-page-header title="back" content="Create" @back="goBack" />
+      <Editor :op="op" style="margin-top: 40px" />
     </div>
   </div>
 </template>
@@ -59,10 +63,11 @@ import { mapGetters } from 'vuex'
 
 import Tab from '@/components/kong/service/tab'
 import Dialog from '@/components/kong/service/dialog'
+import Editor from '@/components/kong/service/editor'
 
 export default {
   name: 'Api',
-  components: { Tab, Dialog },
+  components: { Tab, Dialog, Editor },
   mixins: [infoList],
   data() {
     return {
@@ -70,6 +75,7 @@ export default {
       tableVisible: true,
       tabVisible: false,
       sid: '',
+      op: '',
       list_opts: {
         pre: {
           offset: 0,
@@ -118,11 +124,13 @@ export default {
       this.sid = ''
       this.tableVisible = true
       this.tabVisible = false
+      this.creatorVisible = false
     },
     openServiceInstance(id) {
       this.sid = id
       this.tableVisible = false
       this.tabVisible = true
+      this.op = 'edit'
     },
     async listServices() {
       const params = this.list_opts.next
@@ -139,8 +147,10 @@ export default {
       })
     },
     add() {
-      console.log('add new route')
-      this.dialogFormVisible = true
+      this.op = 'create'
+      this.creatorVisible = true
+      this.tableVisible = false
+      this.tabVisible = false
     },
     closeDialog() {
       this.dialogFormVisible = false

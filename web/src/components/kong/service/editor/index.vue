@@ -1,8 +1,5 @@
 <template>
   <el-form ref="service" :model="service" label-width="auto">
-    <el-form-item label="ID">
-      <el-tag>{{ service.id }}</el-tag>
-    </el-form-item>
     <el-form-item label="Name">
       <el-input v-model="service.name" />
       <p>The Service name.</p>
@@ -39,12 +36,22 @@
       <el-input v-model.number="service.retries" type="number" />
       <p>The number of retries to execute upon failure to proxy. Default: <font>5</font>.</p>
     </el-form-item>
-    <el-form-item label="Tags">
+    <!-- <el-form-item label="Tags">
       <el-tag v-for="tag in service.tags" :key="tag" closable :disable-transitions="false" @close="handleTagsClose(tag)">
         {{ tag }}
       </el-tag>
       <el-input v-if="inputTagsVisible" ref="saveTagsInput" v-model="inputTagValue" class="input-new-tag" size="small" @keyup.enter.native="handleTagsInputConfirm" @blur="handleTagsInputConfirm" />
       <el-button v-else class="button-new-tag" size="small" @click="showTagsInput">+ New Tag</el-button>
+      <p>An optional set of strings associated with the Service for grouping and filtering.</p>
+    </el-form-item> -->
+
+    <el-form-item label="Tags">
+      <div>
+        <el-tag v-for="tag in service.tags" :key="tag" closable :disable-transitions="false" @close="removeTags('tags', tag)">
+          {{ tag }}
+        </el-tag>
+      </div>
+      <el-input v-model="inputTagValue" @keyup.enter.native="addTags('tags')" />
       <p>An optional set of strings associated with the Service for grouping and filtering.</p>
     </el-form-item>
     <el-form-item label="Client Certificate">
@@ -60,13 +67,23 @@
       <p>Maximum depth of chain while verifying Upstream server’s TLS certificate. If set to <font>null</font>, then the Nginx default is respected. Default: <font>null</font>.</p>
     </el-form-item>
     <el-form-item label="CACertificates">
+      <div>
+        <el-tag v-for="tag in service.ca_certificates" :key="tag" closable :disable-transitions="false" @close="removeTags('ca_certificates', tag)">
+          {{ tag }}
+        </el-tag>
+      </div>
+      <el-input v-model="inputCertsValue" @keyup.enter.native="addTags('ca_certificates')" />
+      <p>Array of CA Certificate object UUIDs that are used to build the trust store while verifying upstream server’s TLS certificate. If set to null when Nginx default is respected. If default CA list in Nginx are not specified and TLS verification is enabled, then handshake with upstream server will always fail (because no CA are trusted). With form-encoded, the notation is ca_certificates[]=4e3ad2e4-0bc4-4638-8e34-c84a417ba39b&ca_certificates[]=51e77dc2-8f3e-4afa-9d0e-0e3bbbcfd515. With JSON, use an Array.</p>
+    </el-form-item>
+
+    <!-- <el-form-item label="CACertificates">
       <el-tag v-for="cert in service.ca_certificates" :key="cert" closable :disable-transitions="false" @close="handleCertsClose(cert)">
         {{ cert }}
       </el-tag>
       <el-input v-if="inputCertsVisible" ref="saveCertsTagInput" v-model="inputCertsValue" class="input-new-tag" size="small" @keyup.enter.native="handleCertsInputConfirm" @blur="handleCertsInputConfirm" />
       <el-button v-else class="button-new-tag" size="small" @click="showCertsInput">+ New Tag</el-button>
       <p>Array of CA Certificate object UUIDs that are used to build the trust store while verifying upstream server’s TLS certificate. If set to null when Nginx default is respected. If default CA list in Nginx are not specified and TLS verification is enabled, then handshake with upstream server will always fail (because no CA are trusted). With form-encoded, the notation is ca_certificates[]=4e3ad2e4-0bc4-4638-8e34-c84a417ba39b&ca_certificates[]=51e77dc2-8f3e-4afa-9d0e-0e3bbbcfd515. With JSON, use an Array.</p>
-    </el-form-item>
+    </el-form-item> -->
     <el-form-item label="URL">
       <el-input v-model="service.url" />
       <p>Shorthand attribute to set <font>protocol</font>, <font>host</font>, <font>port</font> and <font>path</font> at once. This attribute is write-only (the Admin API never returns the URL).</p>
@@ -89,6 +106,10 @@ export default {
   name: 'ServiceEditor',
   props: {
     sid: {
+      type: String,
+      default: ''
+    },
+    op: {
       type: String,
       default: ''
     }
@@ -124,7 +145,9 @@ export default {
     }
   },
   async mounted() {
-    await this.getService(this.sid)
+    if (this.op === 'edit') {
+      await this.getService(this.sid)
+    }
   },
   methods: {
     async getService(id) {
@@ -154,45 +177,6 @@ export default {
         this.$message({ type: 'error', message: err })
       })
     },
-    handleTagsClose(tag) {
-      this.service.tags.splice(this.service.tags.indexOf(tag), 1)
-    },
-    showTagsInput() {
-      this.inputTagsVisible = true
-      this.$nextTick(_ => {
-        this.$refs.saveTagsInput.$refs.input.focus()
-      })
-    },
-    handleTagsInputConfirm() {
-      if (this.inputTagValue) {
-        if (this.service.tags === undefined) {
-          this.service.tags = []
-        }
-        this.service.tags.push(this.inputTagValue)
-      }
-      this.inputTagsVisible = false
-      this.inputTagValue = ''
-    },
-    handleCertsClose(tag) {
-      this.service.ca_certificates.splice(this.service.ca_certificates.indexOf(tag), 1)
-    },
-    showCertsInput() {
-      this.inputCertsVisible = true
-      this.$nextTick(_ => {
-        this.$refs.saveCertsTagInput.$refs.input.focus()
-      })
-    },
-    handleCertsInputConfirm() {
-      const inputValue = this.inputCertsValue
-      if (inputValue) {
-        if (this.service.ca_certificates === undefined) {
-          this.service.ca_certificates = []
-        }
-        this.service.ca_certificates.push(inputValue)
-      }
-      this.inputCertsVisible = false
-      this.inputCertsValue = ''
-    },
     async onSubmit() {
       const data = {
         id: this.service.id,
@@ -218,24 +202,42 @@ export default {
         this.$message({ type: 'error', message: err })
       })
       await this.getService(this.sid)
+    },
+    addTags(addType) {
+      switch (addType) {
+        case 'tags':
+          if (this.service.tags === undefined) {
+            this.service.tags = []
+          }
+          this.service.tags.push(this.inputTagValue)
+          this.inputTagValue = ''
+          break
+        case 'ca_certificates':
+          if (this.service.ca_certificates === undefined) {
+            this.service.ca_certificates = []
+          }
+          this.service.ca_certificates.push(this.inputCertsValue)
+          this.inputCertsValue = ''
+          break
+      }
+    },
+    removeTags(rmType, tag) {
+      switch (rmType) {
+        case 'tags':
+          this.service.tags.splice(this.service.tags.indexOf(tag), 1)
+          break
+        case 'ca_certificates':
+          this.service.ca_certificates.splice(this.service.ca_certificates.indexOf(tag), 1)
+          break
+      }
     }
   }
 }
 </script>
 
 <style scoped>
-  .demo-table-expand {
-    font-size: 0;
-  }
-  .demo-table-expand label {
-    width: 90px;
-    color: #99a9bf;
-  }
-  .demo-table-expand .el-form-item {
-    margin-right: 0;
-    margin-bottom: 0;
-    margin-top: 15px;
-    width: 100%;
+  .el-input {
+    width: 300px;
   }
   .el-tag + .el-tag {
     margin-left: 10px;

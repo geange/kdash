@@ -1,7 +1,7 @@
 <template>
   <el-tabs v-model="activeName" @tab-click="handleClick">
     <el-tab-pane label="Service" name="service">
-      <ServiceEditor :sid="sid" />
+      <ServiceEditor :sid="sid" :op="op" />
     </el-tab-pane>
     <el-tab-pane label="Route" name="route">
       <RouteTable :sid="sid" :rtype="routeType" />
@@ -45,6 +45,10 @@ export default {
   mixins: [infoList],
   props: {
     sid: {
+      type: String,
+      default: ''
+    },
+    op: {
       type: String,
       default: ''
     }
