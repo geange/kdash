@@ -1,9 +1,14 @@
 <template>
   <div>
     <div v-if="tableVisible">
-      <div class="button-box clearflex">
-        <el-button size="mini" type="primary" icon="el-icon-plus" @click="add">ADD</el-button>
-      </div>
+      <el-row>
+        <el-select v-model="service" filterable clearable placeholder="请选择" @change="searchService">
+          <el-option v-for="item in services" :key="item.name" :label="item.name" :value="item.name" />
+        </el-select>
+        <div class="button-box clearflex">
+          <el-button size="mini" type="primary" icon="el-icon-plus" @click="add">ADD</el-button>
+        </div>
+      </el-row>
       <el-table :data="tableData">
         <el-table-column label="ID" min-width="250">
           <template slot-scope="scope">
@@ -19,17 +24,6 @@
           </template>
         </el-table-column>
       </el-table>
-      <Dialog :visible="dialogFormVisible" @closeHandler="closeDialog" @updateHandler="listServices" />
-      <el-pagination
-        :current-page="page"
-        :page-size="pageSize"
-        :page-sizes="[10, 30, 50, 100]"
-        :style="{float:'right',padding:'20px'}"
-        :total="total"
-        layout="total, sizes, prev, pager, next, jumper"
-        @current-change="handleCurrentChange"
-        @size-change="handleSizeChange"
-      />
     </div>
     <div v-if="tabVisible">
       <el-page-header title="back" content="Service" @back="goBack" />
@@ -54,7 +48,6 @@ import {
   updateService,
   deleteService,
   getService,
-  listService,
   listAllService
 } from '@/api/kongService'
 
@@ -62,18 +55,21 @@ import infoList from '@/mixins/infoList'
 import { mapGetters } from 'vuex'
 
 import Tab from '@/components/kong/service/tab'
-import Dialog from '@/components/kong/service/dialog'
+// import Dialog from '@/components/kong/service/dialog'
 import Editor from '@/components/kong/service/editor'
 
 export default {
   name: 'Api',
-  components: { Tab, Dialog, Editor },
+  components: { Tab, Editor },
   mixins: [infoList],
   data() {
     return {
+      services: [],
+      service: '',
       dialogFormVisible: false,
       tableVisible: true,
       tabVisible: false,
+      creatorVisible: false,
       sid: '',
       op: '',
       list_opts: {
@@ -97,7 +93,6 @@ export default {
       updateServiceApi: updateService,
       deleteServiceApi: deleteService,
       getServiceApi: getService,
-      listServiceApi: listService,
       listAllServiceApi: listAllService,
       path: path,
       authOptions: [],
@@ -133,18 +128,11 @@ export default {
       this.op = 'edit'
     },
     async listServices() {
-      const params = this.list_opts.next
-      this.listAllServiceApi(params).then((rs) => {
-        this.tableData = rs.data.list
-        if (rs.data.opts === undefined) {
-          this.list_opts.is_end = true
-        } else {
-          this.list_opts.pre = this.list_opts.next
-          this.list_opts.next = rs.data.opts
-        }
-      }).catch(err => {
-        console.log(err)
-      })
+      const res = await listAllService()
+      if (res.code === 0) {
+        this.tableData = res.data.list
+        this.services = res.data.list
+      }
     },
     add() {
       this.op = 'create'
@@ -154,6 +142,16 @@ export default {
     },
     closeDialog() {
       this.dialogFormVisible = false
+    },
+    async searchService() {
+      if (this.service !== '') {
+        const res = await getService({ id: this.service })
+        if (res.code === 0) {
+          this.tableData = [res.data]
+        }
+      } else {
+        this.tableData = this.services
+      }
     }
   }
 }
